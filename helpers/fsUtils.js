@@ -10,9 +10,7 @@ const readFromFile = util.promisify(fs.readFile);
  *  @returns {void} Nothing
  */
 const writeToFile = (destination, content) =>
-  fs.writeFile(destination, JSON.stringify(content, null, 4), (err) =>
-    err ? console.error(err) : console.info(`\nData written to ${destination}`)
-  );
+  fs.writeFileSync(destination, JSON.stringify(content, null, 4)); 
 /**
  *  Function to read data from a given a file and append some content
  *  @param {object} content The content you want to append to the file.
@@ -20,15 +18,22 @@ const writeToFile = (destination, content) =>
  *  @returns {void} Nothing
  */
 const readAndAppend = (content, file) => {
-  fs.readFile(file, 'utf8', (err, data) => {
-    if (err) {
-      console.error(err);
-    } else {
-      const parsedData = JSON.parse(data);
-      parsedData.push(content);
-      writeToFile(file, parsedData);
-    }
-  });
-};
+    const saved = fs.readFileSync(file, 'utf8')
 
-module.exports = { readFromFile, writeToFile, readAndAppend };
+      const parsedData = JSON.parse(saved);
+      content.id = parsedData.length ? parsedData[parsedData.length-1].id + 1 : 1;
+      parsedData.push(content);
+      fs.writeFileSync(file, JSON.stringify(parsedData, null, 4)); 
+      return parsedData;
+};
+const readAndRemove = (id, file) => {
+  const saved = fs.readFileSync(file, 'utf8')
+  const parsedData = JSON.parse(saved);
+  const indexToRemove = parsedData.findIndex( note => note.id == id );
+  parsedData.splice(indexToRemove, 1);
+  fs.writeFileSync(file, JSON.stringify(parsedData, null, 4)); 
+  return parsedData;
+
+}
+
+module.exports = { readFromFile, writeToFile, readAndAppend, readAndRemove };
