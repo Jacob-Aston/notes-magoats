@@ -28,6 +28,6 @@ Github profile page: [Jacob-Aston](https://github.com/Jacob-Aston)
 
 Repo: https://github.com/Jacob-Aston/notes-magoats
 
-Live Page: https://git.heroku.com/notes-magoats.git 
+Live Page: https://notes-magoats.herokuapp.com/ 
 
 ---
